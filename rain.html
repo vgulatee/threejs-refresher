@@ -1,0 +1,62 @@
+<html>
+    <head>
+        <title>It's raining donuts (Hallelujah)</title>
+        <link rel = "stylesheet" href="style.css">
+        <script src = "three.min.js"></script>
+    </head>
+    <body>
+    </body>
+</html>
+
+<script>
+    let scene, camera, renderer;
+    let donuts=[];
+    let drop= 0.1 ;
+    let init = function() {
+        /*Create scene*/
+        scene= new THREE.Scene();
+        scene.background = new THREE.Color(0x000000);
+        /*Create camera and set it up*/
+        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
+        camera.position.z = 20;
+        camera.position.y=-10;
+
+        // createCube();
+        // createSphere();
+        // createTorus();
+        /*Create the Renderer*/
+        renderer =  new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        
+        document.body.appendChild(renderer.domElement);
+
+
+    };
+    let randomGenPosition=function(to, from){
+        let x= Math.random() * (to-from);
+        return x + from;
+    };
+    let createDonuts = function(){
+        let geometry = new THREE.TorusGeometry(1, 0.5, 5, 30);
+        let material = new THREE.MeshBasicMaterial({color: 0xffffff*Math.random()});
+        let donut = new THREE.Mesh(geometry, material);
+        donut.position.x=randomGenPosition(-15, 15);
+        donut.position.z=randomGenPosition(-15, 15);
+        donut.position.y=15;
+        scene.add(donut);
+        donuts.push(donut);
+    }
+    let mainLoop= function(){
+        let y=Math.random();
+        if(y<=0.2){
+            createDonuts();
+        }
+        donuts.forEach(element => {
+            element.position.y-=drop;
+        });
+        renderer.render(scene, camera);
+        requestAnimationFrame(mainLoop);
+    };
+    init();
+    mainLoop();
+</script>

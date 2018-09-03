@@ -9,18 +9,19 @@
 </html>
 
 <script>
-    let scene, camera, renderer, cube;
-    let angle= 0.1;
+    let scene, camera, renderer, cube, sphere, torus;
+    let angle= 0.01;
     let init = function() {
         /*Create scene*/
         scene= new THREE.Scene();
         scene.background = new THREE.Color(0xababab);
         /*Create camera and set it up*/
-        camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 1, 1000);
-        camera.position.z = 5;
+        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
+        camera.position.z = 20;
 
         createCube();
-
+        createSphere();
+        createTorus();
         /*Create the Renderer*/
         renderer =  new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -31,13 +32,32 @@
     };
     let createCube = function(){
         /*Create cube function */
-        let geometry = new THREE.BoxGeometry(1,1,1);
-        let material = new THREE.MeshBasicMaterial({color: 0x00a1cb});
+        let geometry = new THREE.BoxGeometry(8,8,8);
+        let material = new THREE.MeshBasicMaterial({color: 0x00a1cb, wireframe: true});
         cube = new THREE.Mesh(geometry, material);
+        cube.position.x=-15;
         scene.add(cube);
     };
+    let createSphere = function(){
+        /*Create sphere function */
+        let geometry = new THREE.SphereGeometry(5, 30, 30);
+        let material = new THREE.MeshBasicMaterial({color: 0xcb003d, wireframe:true})
+        sphere = new THREE.Mesh(geometry, material);
+        scene.add(sphere);
+    };
+    let createTorus = function(){
+        let geometry = new THREE.TorusGeometry(5, 2, 15, 5, 2*Math.PI);
+        let material = new THREE.MeshBasicMaterial({color: 0xfffff, wireframe: true});
+        torus = new THREE.Mesh(geometry, material);
+        torus.position.x=15;
+        scene.add(torus);
+    }
     let mainLoop= function(){
         cube.rotation.y+=angle;
+        sphere.rotation.y+=angle;
+        sphere.rotation.x+=angle;
+        torus.rotation.x+=angle;
+        torus.rotation.y+=angle;
         renderer.render(scene, camera);
         requestAnimationFrame(mainLoop);
     };
